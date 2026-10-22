@@ -17,7 +17,9 @@ DESC=$(node -p "require('./.claude-plugin/plugin.json').description")
 TOPICS=$(node -p "require('./.claude-plugin/plugin.json').keywords.concat(['claude-code','claude-code-plugin']).join(',')")
 ZIP="dist/$NAME-v$V.zip"
 
-[ -z "$(git status --porcelain)" ] || { echo "publish: commit your changes first" >&2; exit 1; }
+if [ -n "$(git status --porcelain)" ]; then
+  [ "$DRY" = 1 ] && echo "note: uncommitted changes would block a real publish" || { echo "publish: commit your changes first" >&2; exit 1; }
+fi
 
 if gh repo view "$REPO" >/dev/null 2>&1; then
   echo "repo exists: $REPO"

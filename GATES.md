@@ -37,12 +37,12 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
 - [x] P7: one command (curl | sh from GitHub) installs the plugin AND sets up the voice, in an isolated config, then speaks
   CHECK: node checks/release.mjs one-command
   EXPECT: P7 one-command passed
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=curl https://raw.githubusercontent.com/goodrahstar/talk-for-claude/main/install.sh | sh -> plugin installed, voice ready, spoke 2.1s; total 31s | P7 one-command passed
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=/Users/rahulkumar/Desktop/projects/talk-for-claude; path=34ec615918d0/18 entries; output=curl https://raw.githubusercontent.com/goodrahstar/talk-for-claude/main/install.sh | sh -> plugin installed, voice ready, spoke 2.1s; total 30s | P7 one-command passed
 
-- [x] P8: one command (`npm run publish`) creates or updates the public repo with description, topics and the release zip; safe to re-run
+- [ ] P8: one command (`npm run publish`) creates or updates the public repo with description, topics and the release zip; safe to re-run
   CHECK: node checks/release.mjs publish-script
   EXPECT: P8 publish-script passed
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=dry run resolves goodrahstar/talk-for-claude v0.1.0: repo, description+topics, push, release zip | P8 publish-script passed
+  EVIDENCE: pending
 
 - [ ] P9: install into a claude.ai / Cowork cloud subscription
   EVIDENCE: pending
@@ -50,6 +50,6 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
 - [x] P10: Rahul's own Mac uses the published plugin: old local /talk copies backed up and removed, plugin installed, voice ready
   CHECK: node checks/release.mjs local-switch
   EXPECT: P10 local-switch passed
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=old copies gone; talk@talk-for-claude installed; READY | P10 local-switch passed
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=/Users/rahulkumar/Desktop/projects/talk-for-claude; path=34ec615918d0/18 entries; output=old copies gone; talk@talk-for-claude installed; READY | P10 local-switch passed
 
 ABANDON: P9 Claude Code docs: claude.ai and Cowork do not install plugins that contain bin/, and the voice must play on the user's own Mac speakers; cloud sessions have no audio output. README Limits states this.
