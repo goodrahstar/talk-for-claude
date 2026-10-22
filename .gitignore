@@ -9,3 +9,4 @@ venv/
 dist/
 .env*
 .claude/
+brag-output*/
