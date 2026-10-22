@@ -17,20 +17,25 @@ One machine, one run per check. Re-run them yourself with `npm run check`.
 
 ## Install
 
-Paste this in your terminal:
+One command. It installs the plugin and sets up the voice:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/goodrahstar/talk-for-claude/main/install.sh | sh
+```
+
+Then restart Claude Code and type `/talk` after any reply.
+
+Prefer Claude Code's own plugin commands? This does the same, and the voice sets itself up on the first `/talk`:
 
 ```bash
 claude plugin marketplace add goodrahstar/talk-for-claude && claude plugin install talk@talk-for-claude
 ```
 
-Or inside Claude Code:
+Inside Claude Code: `/plugin marketplace add goodrahstar/talk-for-claude`, then `/plugin install talk@talk-for-claude`.
 
-```
-/plugin marketplace add goodrahstar/talk-for-claude
-/plugin install talk@talk-for-claude
-```
+Offline or manual: download the zip from [Releases](https://github.com/goodrahstar/talk-for-claude/releases), unzip it, then `claude plugin marketplace add ./talk-for-claude && claude plugin install talk@talk-for-claude`.
 
-The first `/talk` sets up the voice once (a few minutes). It needs an **Apple Silicon Mac** and **uv** (`brew install uv`).
+Needs an **Apple Silicon Mac**, **Claude Code**, and **uv** (the installer adds it with Homebrew if missing).
 
 ## Use
 
@@ -59,14 +64,27 @@ Why Kokoro-82M: it is the smallest of the open voice models I tested (Pocket TTS
 | `bin/talk` | The CLI Claude calls; also usable from any terminal |
 | `engine/talk.py` | Cleaning, Kokoro synthesis, background playback, stop |
 | `scripts/setup.sh` | One-time setup into `~/.claude-talk` |
+| `install.sh` | The one-command installer |
+| `scripts/publish.sh` | One-command publish to GitHub |
 | `checks/` | The gate checks behind every number above |
 
 ## Limits
 
 - macOS on Apple Silicon only (MLX and `afplay`).
+- Claude Code on your Mac only. It does not install in claude.ai or Cowork: those do not run plugins that ship executables, and a cloud session cannot play audio on your speakers.
 - English voices only in this version.
 - Each `/talk` loads the model fresh (about 0.5 s) and frees the memory afterwards.
 - Numbers come from one M3 Pro. Older M1 chips will be slower.
+
+## Publish your own fork
+
+Fork it, change the names in `.claude-plugin/`, commit, then:
+
+```bash
+npm run publish
+```
+
+It creates (or updates) the public GitHub repo with the description and topics from `plugin.json`, pushes `main`, and attaches the release zip. Safe to re-run. `sh scripts/publish.sh --dry-run` shows the steps first.
 
 ## Uninstall
 
@@ -85,7 +103,11 @@ claude plugin uninstall talk@talk-for-claude && rm -rf ~/.claude-talk
 | P3 | No keys or personal paths in the repo (detectors proven on planted samples) |
 | P4 | Fresh install from this GitHub repo into an empty Claude config sets itself up and speaks |
 | P5 | Public repo, MIT license, release zip that validates as a plugin |
-| P6 | The install line above matches the names that actually installed |
+| P6 | The install lines above match the names that actually installed |
+| P7 | The one-command installer, run from GitHub into an empty config, installs, sets up and speaks |
+| P8 | `npm run publish` creates or updates the repo, topics and release (dry run checked) |
+| P9 | Abandoned: cloud install (claude.ai, Cowork) is not possible, see Limits |
+| P10 | The author's own Mac runs the published plugin, not a local copy |
 
 ## License
 

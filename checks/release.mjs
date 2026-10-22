@@ -133,8 +133,59 @@ if (which === "validate") {
   if (!md.includes(oneLiner)) fail(`README lacks the exact one-liner: ${oneLiner}`);
   if (!md.includes(`/plugin install ${plugin.name}@${market.name}`)) fail("README lacks the in-session install line");
   if (!md.includes("docs/banner.png")) fail("README lacks the banner");
+  const curl = `curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | sh`;
+  if (!md.includes(curl)) fail("README lacks the curl one-command install");
   console.log(`README one-liner matches ${plugin.name}@${market.name}`);
   console.log("P6 readme passed");
+} else if (which === "one-command") {
+  const cfg = mkdtempSync(join(tmpdir(), "talkoc-"));
+  const data = "/tmp/talk-oc", hf = "/tmp/talk-oc-hf";
+  rmSync(data, { recursive: true, force: true });
+  rmSync(hf, { recursive: true, force: true });
+  const url = `https://raw.githubusercontent.com/${REPO}/main/install.sh`;
+  const env = { ...process.env, CLAUDE_CONFIG_DIR: cfg, TALK_HOME: data, HF_HOME: hf, TALK_QUIET: "1" };
+  const t0 = Date.now();
+  const r = sh("/bin/sh", ["-c", `curl -fsSL ${url} | sh`], { env, cwd: tmpdir() });
+  if (r.status !== 0) fail(`installer exited ${r.status}: ${r.out.slice(-600)}`);
+  const secs = ((Date.now() - t0) / 1000).toFixed(0);
+  const bins = walk(cfg).filter((p) => p.endsWith("bin/talk") && p.includes("plugins/cache/"));
+  if (bins.length !== 1) fail(`expected one installed bin/talk, found ${bins.length}`);
+  const talk = join(cfg, bins[0]);
+  const doc = sh(talk, ["--doctor"], { env });
+  if (!doc.out.startsWith("READY")) fail(`voice not ready after installer: ${doc.out}`);
+  const wav = join(data, "oc.wav");
+  const say = sh(talk, ["--out", wav, "--no-play", "One command, and it talks."], { env });
+  if (say.status !== 0) fail(`synth: ${say.out.slice(-300)}`);
+  const w = readWav(wav);
+  if (w.seconds < 1 || w.rms < 0.01) fail("empty audio");
+  rmSync(cfg, { recursive: true, force: true });
+  rmSync(data, { recursive: true, force: true });
+  rmSync(hf, { recursive: true, force: true });
+  console.log(`curl ${url} | sh -> plugin installed, voice ready, spoke ${w.seconds.toFixed(1)}s; total ${secs}s`);
+  console.log("P7 one-command passed");
+} else if (which === "publish-script") {
+  const r = sh("sh", ["scripts/publish.sh", "--dry-run"]);
+  if (r.status !== 0) fail(r.out.slice(-500));
+  if (!r.out.includes(`repo exists: ${REPO}`) && !r.out.includes("DRY: gh repo create")) fail("script did not resolve the repo");
+  for (const need of ["DRY: gh repo edit", `published https://github.com/${REPO} (v${plugin.version})`])
+    if (!r.out.includes(need)) fail(`missing step: ${need}\n${r.out}`);
+  if (!/DRY: gh release (upload|create) v/.test(r.out)) fail("no release step");
+  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+  if (pkg.scripts.publish !== "sh scripts/publish.sh") fail("npm run publish is not wired to scripts/publish.sh");
+  console.log(`dry run resolves ${REPO} v${plugin.version}: repo, description+topics, push, release zip`);
+  console.log("P8 publish-script passed");
+} else if (which === "local-switch") {
+  const home = process.env.HOME;
+  for (const old of [".claude/commands/talk.md", ".local/bin/talk"])
+    if (existsSync(join(home, old))) fail(`old local copy still present: ~/${old}`);
+  const list = sh("claude", ["plugin", "list"], { cwd: home });
+  if (!list.out.includes(`${plugin.name}@${market.name}`)) fail("plugin not installed in the real Claude config");
+  const bins = walk(join(home, ".claude/plugins/cache", market.name)).filter((p) => p.endsWith("bin/talk"));
+  if (!bins.length) fail("installed bin/talk not found");
+  const doc = sh(join(home, ".claude/plugins/cache", market.name, bins.sort().pop()), ["--doctor"], { env: { ...process.env, TALK_HOME: "" } });
+  if (!doc.out.startsWith("READY")) fail(`voice not ready: ${doc.out}`);
+  console.log(`old copies gone; ${plugin.name}@${market.name} installed; ${doc.out.trim().split(" (")[0]}`);
+  console.log("P10 local-switch passed");
 } else {
   fail("unknown check");
 }
