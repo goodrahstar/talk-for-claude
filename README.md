@@ -7,7 +7,7 @@
 | Measured on an M3 Pro MacBook Pro | Result |
 | --- | --- |
 | 59-word reply → speech | 19.9 s of audio generated in **4.9 s**, cold start included |
-| Time until you hear it | about 4 s (speech streams sentence by sentence) |
+| Time until you hear it | 2.3 to 3.8 s over 3 runs (speech streams sentence by sentence) |
 | Network needed after setup | **none** (checked with every connection blocked) |
 | Cost | free, no API key |
 | One-time setup | 33 s here, fresh install from GitHub into an empty config (packages may have come from uv's local cache; expect a few minutes on a new Mac) |

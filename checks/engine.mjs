@@ -73,18 +73,20 @@ const checks = {
     if (r.ms >= 3000) fail(`talk took ${r.ms}ms to return`);
     if (!existsSync(pidFile)) fail("no play.pid written");
     const pgid = readFileSync(pidFile, "utf8").trim();
+    const t0 = Date.now() - r.ms;
     let playing = false;
     for (let i = 0; i < 80 && !playing; i++) {
       playing = procsInGroup(pgid).some((p) => p[2] && p[2].endsWith("afplay"));
       if (!playing) sleep(250);
     }
     if (!playing) fail("afplay never started in the speaker's process group");
+    const firstAudioMs = Date.now() - t0;
     const s = run(["--stop"]);
     if (!s.out.includes("stopped")) fail(`--stop said: ${s.out}`);
     sleep(700);
     const left = procsInGroup(pgid);
     if (left.length) fail(`processes alive after --stop: ${JSON.stringify(left)}`);
-    console.log(`playback: returned in ${r.ms}ms, afplay ran, --stop cleaned group ${pgid}`);
+    console.log(`playback: returned in ${r.ms}ms, first audio after ${(firstAudioMs / 1000).toFixed(1)}s, --stop cleaned group ${pgid}`);
   },
   clean() {
     const fixture = [
