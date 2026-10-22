@@ -126,6 +126,8 @@ if (which === "validate") {
   const val = sh("claude", ["plugin", "validate", pdir]);
   if (val.status !== 0 || !val.out.includes("Validation passed")) fail(`zip plugin invalid: ${val.out.slice(-400)}`);
   if (!(statSync(join(pdir, "bin/talk")).mode & 0o111)) fail("bin/talk in zip is not executable");
+  const cdl = sh("gh", ["release", "download", TAG, "--repo", REPO, "--pattern", "talk-claude-ai-skill.zip", "--dir", dir]);
+  if (cdl.status !== 0) fail(`claude.ai skill zip missing from release: ${cdl.out}`);
   rmSync(dir, { recursive: true, force: true });
   console.log(`${j.url} public, MIT, ${j.repositoryTopics.length} topics; ${TAG}/${ZIP} validates`);
   console.log("P5 published passed");
@@ -188,6 +190,38 @@ if (which === "validate") {
   if (!doc.out.startsWith("READY")) fail(`voice not ready: ${doc.out}`);
   console.log(`old copies gone; ${plugin.name}@${market.name} installed; ${doc.out.trim().split(" (")[0]}`);
   console.log("P10 local-switch passed");
+} else if (which === "cloud-skill") {
+  const b = sh("sh", ["scripts/build-cloud-zip.sh"]);
+  if (b.status !== 0) fail(b.out);
+  const dir = mkdtempSync(join(tmpdir(), "talkcloud-"));
+  if (sh("unzip", ["-q", "dist/talk-claude-ai-skill.zip", "-d", dir]).status !== 0) fail("zip does not extract");
+  const files = walk(dir);
+  if (files.some((f) => f.split("/").includes("bin"))) fail("cloud zip contains bin/ (claude.ai would refuse it)");
+  const top = [...new Set(files.map((f) => f.split("/")[0]))];
+  if (top.length !== 1 || top[0] !== "talk") fail(`zip must hold exactly one folder named talk, found ${top}`);
+  const md = readFileSync(join(dir, "talk/SKILL.md"), "utf8");
+  const fm = md.match(/^---\n([\s\S]*?)\n---\n/);
+  if (!fm) fail("SKILL.md has no frontmatter");
+  const name = (fm[1].match(/^name: (.+)$/m) || [])[1];
+  const desc = (fm[1].match(/^description: (.+)$/m) || [])[1] || "";
+  if (name !== "talk") fail(`skill name "${name}" must match folder "talk"`);
+  if (!/^[a-z0-9-]{1,64}$/.test(name)) fail("skill name must be lowercase letters, digits, hyphens, max 64");
+  if (desc.length < 40 || desc.length > 1024) fail(`description length ${desc.length} out of range`);
+  if (/[<>]/.test(desc)) fail("description contains angle brackets");
+  if (!md.includes("player.html") || !md.includes("__TALK_TEXT__")) fail("SKILL.md does not explain filling player.html");
+  const html = readFileSync(join(dir, "talk/player.html"), "utf8");
+  if (html.split('"__TALK_TEXT__"').length !== 2) fail("player.html must contain the placeholder exactly once");
+  // Encode exactly as SKILL.md instructs, then prove a hostile string survives the round trip.
+  if (!md.includes('.replace("</", "<\\\\/")')) fail("SKILL.md must tell Claude to escape </ in the JSON");
+  const hostile = 'He said "hi" </script><b>& left.';
+  const filled = html.replace('"__TALK_TEXT__"', JSON.stringify(hostile).replace(/<\//g, "<\\/"));
+  const m = filled.match(/<script id="talk-text" type="application\/json">([\s\S]*?)<\/script>/);
+  if (!m || JSON.parse(m[1]) !== hostile) fail("encoded text does not round-trip through the player's script tag");
+  for (const need of ["kokoro-js@1.2.1", "Kokoro-82M-v1.0-ONNX", "speechSynthesis", "AudioContext"])
+    if (!html.includes(need)) fail(`player.html missing ${need}`);
+  rmSync(dir, { recursive: true, force: true });
+  console.log(`claude.ai skill zip: talk/SKILL.md + player.html, no bin/, name ok, description ${desc.length} chars`);
+  console.log("P9 cloud-skill passed");
 } else {
   fail("unknown check");
 }

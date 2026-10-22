@@ -44,7 +44,12 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
   EXPECT: P8 publish-script passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=dry run resolves goodrahstar/talk-for-claude v0.1.0: repo, description+topics, push, release zip | P8 publish-script passed
 
-- [ ] P9: install into a claude.ai / Cowork cloud subscription
+- [ ] P9: cloud: a skill zip (no bin/) passes the skill format check and its player page speaks in a real browser, Kokoro first with system-voice fallback
+  CHECK: node checks/release.mjs cloud-skill
+  EXPECT: P9 cloud-skill passed
+  EVIDENCE: pending
+
+- [ ] P11: the cloud skill installs in Rahul's claude.ai account (Customize > Skills) and a claude.ai chat produces a working talk player
   EVIDENCE: pending
 
 - [x] P10: Rahul's own Mac uses the published plugin: old local /talk copies backed up and removed, plugin installed, voice ready
@@ -52,4 +57,3 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
   EXPECT: P10 local-switch passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=old copies gone; talk@talk-for-claude installed; READY | P10 local-switch passed
 
-ABANDON: P9 Claude Code docs: claude.ai and Cowork do not install plugins that contain bin/, and the voice must play on the user's own Mac speakers; cloud sessions have no audio output. README Limits states this.
