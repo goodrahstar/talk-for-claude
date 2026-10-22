@@ -17,12 +17,12 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
 - [x] P3: no secrets or personal paths in tracked files (detector proven on a planted key and a planted home path)
   CHECK: node checks/release.mjs secrets
   EXPECT: P3 secrets passed
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=23 committed files scanned, 10 detectors proven on planted samples, 0 hits | P3 secrets passed
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=21 committed files scanned, 10 detectors proven on planted samples, 0 hits | P3 secrets passed
 
 - [x] P4: fresh install from the public GitHub repo, in an isolated Claude config and data dir, sets itself up from zero and speaks
   CHECK: node checks/release.mjs fresh-install
   EXPECT: P4 fresh install passed
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=installed talk@talk-for-claude from goodrahstar/talk-for-claude into /var/folders/r0/c3_blnys55q2gt91xxbbfyt40000gn/T/talkcfg-zVBQH9; setup from zero took 28s; spoke 2.5s | P4 fresh install passed
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=installed talk@talk-for-claude from goodrahstar/talk-for-claude into /var/folders/r0/c3_blnys55q2gt91xxbbfyt40000gn/T/talkcfg-pFxAgl; setup from zero took 29s; spoke 2.5s | P4 fresh install passed
 
 - [x] P5: public repo is live with description, topics, README, MIT license, and a release whose zip contains a valid plugin
   CHECK: node checks/release.mjs published
@@ -44,10 +44,10 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
   EXPECT: P8 publish-script passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=dry run resolves goodrahstar/talk-for-claude v0.1.0: repo, description+topics, push, release zip | P8 publish-script passed
 
-- [ ] P9: `npx talk-for-claude` from the public npm registry installs the plugin and sets up the voice in an isolated config, then speaks
+- [x] P9: `npx talk-for-claude` from the public npm registry installs the plugin and sets up the voice in an isolated config, then speaks
   CHECK: node checks/release.mjs npx
   EXPECT: P9 npx passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=npx talk-for-claude@0.1.0 from npm -> plugin installed, voice ready, spoke 2.0s | P9 npx passed
 
 - [x] P10: Rahul's own Mac uses the published plugin: old local /talk copies backed up and removed, plugin installed, voice ready
   CHECK: node checks/release.mjs local-switch
