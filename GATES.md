@@ -4,32 +4,32 @@ OWNS: .claude-plugin/**, commands/**, bin/**, engine/**, scripts/**, checks/**, 
 
 Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is its own marketplace, installable with one command, plus a release zip.
 
-- [ ] P1: plugin and marketplace manifests pass Claude Code's own validator
+- [x] P1: plugin and marketplace manifests pass Claude Code's own validator
   CHECK: node checks/release.mjs validate
   EXPECT: P1 validate passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=validator clean for talk@talk-for-claude 0.1.0 | P1 validate passed
 
-- [ ] P2: engine works from the repo: real speech, offline, fast, background playback, stop, markdown cleaning
+- [x] P2: engine works from the repo: real speech, offline, fast, background playback, stop, markdown cleaning
   CHECK: node checks/engine.mjs all
   EXPECT: P2 engine passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=clean: markdown, code, links and emoji removed; words kept | P2 engine passed
 
-- [ ] P3: no secrets or personal paths in tracked files (detector proven on a planted key and a planted home path)
+- [x] P3: no secrets or personal paths in tracked files (detector proven on a planted key and a planted home path)
   CHECK: node checks/release.mjs secrets
   EXPECT: P3 secrets passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=18 files scanned, 10 detectors proven on planted samples, 0 hits | P3 secrets passed
 
-- [ ] P4: fresh install from the public GitHub repo, in an isolated Claude config and data dir, sets itself up from zero and speaks
+- [x] P4: fresh install from the public GitHub repo, in an isolated Claude config and data dir, sets itself up from zero and speaks
   CHECK: node checks/release.mjs fresh-install
   EXPECT: P4 fresh install passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=installed talk@talk-for-claude from goodrahstar/talk-for-claude into /var/folders/r0/c3_blnys55q2gt91xxbbfyt40000gn/T/talkcfg-C6Yx5Y; setup from zero took 30s; spoke 2.5s | P4 fresh install passed
 
-- [ ] P5: public repo is live with description, topics, README, MIT license, and a release whose zip contains a valid plugin
+- [x] P5: public repo is live with description, topics, README, MIT license, and a release whose zip contains a valid plugin
   CHECK: node checks/release.mjs published
   EXPECT: P5 published passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=https://github.com/goodrahstar/talk-for-claude public, MIT, 10 topics; v0.1.0/talk-for-claude-v0.1.0.zip validates | P5 published passed
 
-- [ ] P6: README one-line install command matches the marketplace and plugin names that actually installed in P4
+- [x] P6: README one-line install command matches the marketplace and plugin names that actually installed in P4
   CHECK: node checks/release.mjs readme
   EXPECT: P6 readme passed
-  EVIDENCE: pending
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=README one-liner matches talk@talk-for-claude | P6 readme passed
