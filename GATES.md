@@ -44,6 +44,11 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
   EXPECT: P8 publish-script passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=dry run resolves goodrahstar/talk-for-claude v0.1.0: repo, description+topics, push, release zip | P8 publish-script passed
 
+- [ ] P9: `npx talk-for-claude` from the public npm registry installs the plugin and sets up the voice in an isolated config, then speaks
+  CHECK: node checks/release.mjs npx
+  EXPECT: P9 npx passed
+  EVIDENCE: pending
+
 - [x] P10: Rahul's own Mac uses the published plugin: old local /talk copies backed up and removed, plugin installed, voice ready
   CHECK: node checks/release.mjs local-switch
   EXPECT: P10 local-switch passed

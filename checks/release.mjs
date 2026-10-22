@@ -137,6 +137,7 @@ if (which === "validate") {
   if (!md.includes("docs/banner.png")) fail("README lacks the banner");
   const curl = `curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | sh`;
   if (!md.includes(curl)) fail("README lacks the curl one-command install");
+  if (!md.includes("npx talk-for-claude")) fail("README lacks the npx install");
   console.log(`README one-liner matches ${plugin.name}@${market.name}`);
   console.log("P6 readme passed");
 } else if (which === "one-command") {
@@ -188,6 +189,28 @@ if (which === "validate") {
   if (!doc.out.startsWith("READY")) fail(`voice not ready: ${doc.out}`);
   console.log(`old copies gone; ${plugin.name}@${market.name} installed; ${doc.out.trim().split(" (")[0]}`);
   console.log("P10 local-switch passed");
+} else if (which === "npx") {
+  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+  const v = sh("npm", ["view", pkg.name, "version"], { cwd: tmpdir() });
+  if (v.status !== 0 || v.stdout.trim() !== pkg.version) fail(`npm registry has ${v.stdout.trim() || "nothing"} for ${pkg.name}, expected ${pkg.version}`);
+  const cfg = mkdtempSync(join(tmpdir(), "talknpx-"));
+  const data = "/tmp/talk-npx";
+  rmSync(data, { recursive: true, force: true });
+  const env = { ...process.env, CLAUDE_CONFIG_DIR: cfg, TALK_HOME: data, TALK_QUIET: "1" };
+  const r = sh("npx", ["--yes", `${pkg.name}@${pkg.version}`], { env, cwd: tmpdir() });
+  if (r.status !== 0) fail(`npx exited ${r.status}: ${r.out.slice(-500)}`);
+  const bins = walk(cfg).filter((p) => p.endsWith("bin/talk") && p.includes("plugins/cache/"));
+  if (bins.length !== 1) fail(`expected one installed bin/talk, found ${bins.length}`);
+  const talk = join(cfg, bins[0]);
+  const wav = join(data, "npx.wav");
+  const say = sh(talk, ["--out", wav, "--no-play", "Installed with npx."], { env });
+  if (say.status !== 0) fail(`synth: ${say.out.slice(-300)}`);
+  const w = readWav(wav);
+  if (w.seconds < 1 || w.rms < 0.01) fail("empty audio");
+  rmSync(cfg, { recursive: true, force: true });
+  rmSync(data, { recursive: true, force: true });
+  console.log(`npx ${pkg.name}@${pkg.version} from npm -> plugin installed, voice ready, spoke ${w.seconds.toFixed(1)}s`);
+  console.log("P9 npx passed");
 } else {
   fail("unknown check");
 }

@@ -20,6 +20,12 @@ One machine, one run per check. Re-run them yourself with `npm run check`.
 One command. It installs the plugin and sets up the voice:
 
 ```bash
+npx talk-for-claude
+```
+
+No Node? Same thing with curl:
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/goodrahstar/talk-for-claude/main/install.sh | sh
 ```
 
@@ -66,6 +72,7 @@ Why Kokoro-82M: it is the smallest of the open voice models I tested (Pocket TTS
 | `engine/talk.py` | Cleaning, Kokoro synthesis, background playback, stop |
 | `scripts/setup.sh` | One-time setup into `~/.claude-talk` |
 | `install.sh` | The one-command installer |
+| `npm/cli.mjs` | `npx talk-for-claude`: runs the installer |
 | `scripts/publish.sh` | One-command publish to GitHub |
 | `checks/` | The gate checks behind every number above |
 
@@ -106,6 +113,7 @@ claude plugin uninstall talk@talk-for-claude && rm -rf ~/.claude-talk
 | P5 | Public repo, MIT license, release zip that validates as a plugin |
 | P6 | The install lines above match the names that actually installed |
 | P7 | The one-command installer, run from GitHub into an empty config, installs, sets up and speaks |
+| P9 | `npx talk-for-claude`, from the npm registry into an empty config, installs, sets up and speaks |
 | P8 | `npm run publish` creates or updates the repo, topics and release (dry run checked) |
 | P10 | The author's own Mac runs the published plugin, not a local copy |
 

@@ -1,8 +1,7 @@
 {
   "name": "talk-for-claude",
   "version": "0.1.0",
-  "private": true,
-  "description": "/talk for Claude Code: speak the last reply with a local Kokoro-82M voice.",
+  "description": "/talk for Claude Code: Claude reads its last reply out loud with a local Kokoro-82M voice on your Mac. Run: npx talk-for-claude",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -10,5 +9,35 @@
     "check:release": "node checks/release.mjs fresh-install && node checks/release.mjs published",
     "zip": "sh scripts/build-zip.sh",
     "publish": "sh scripts/publish.sh"
-  }
+  },
+  "bin": {
+    "talk-for-claude": "npm/cli.mjs"
+  },
+  "files": [
+    "npm/cli.mjs",
+    "install.sh",
+    "README.md",
+    "LICENSE"
+  ],
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goodrahstar/talk-for-claude.git"
+  },
+  "homepage": "https://github.com/goodrahstar/talk-for-claude",
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "tts",
+    "text-to-speech",
+    "kokoro",
+    "mlx",
+    "voice"
+  ],
+  "author": "Rahul Kumar"
 }
