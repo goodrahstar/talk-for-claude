@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "talk",
+  "version": "0.1.0",
+  "description": "/talk reads Claude's last reply out loud: rewritten for listening, spoken by Kokoro-82M running locally on your Mac. Offline, free, no API keys.",
+  "author": {
+    "name": "Rahul Kumar",
+    "url": "https://github.com/goodrahstar"
+  },
+  "homepage": "https://github.com/goodrahstar/talk-for-claude",
+  "repository": "https://github.com/goodrahstar/talk-for-claude",
+  "license": "MIT",
+  "keywords": ["tts", "voice", "text-to-speech", "kokoro", "mlx", "accessibility", "adhd", "macos"]
+}

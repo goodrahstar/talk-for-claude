@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "talk-for-claude",
+  "description": "Give Claude Code a voice: /talk speaks the last reply with a local Kokoro-82M model on Apple Silicon.",
+  "owner": {
+    "name": "Rahul Kumar",
+    "url": "https://github.com/goodrahstar"
+  },
+  "plugins": [
+    {
+      "name": "talk",
+      "description": "/talk speaks Claude's last reply out loud with a local, offline Kokoro-82M voice (Apple Silicon Macs).",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

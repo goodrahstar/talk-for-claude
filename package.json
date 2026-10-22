@@ -1,0 +1,13 @@
+{
+  "name": "talk-for-claude",
+  "version": "0.1.0",
+  "private": true,
+  "description": "/talk for Claude Code: speak the last reply with a local Kokoro-82M voice.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "check": "node checks/release.mjs validate && node checks/engine.mjs all && node checks/release.mjs secrets && node checks/release.mjs readme",
+    "check:release": "node checks/release.mjs fresh-install && node checks/release.mjs published",
+    "zip": "sh scripts/build-zip.sh"
+  }
+}

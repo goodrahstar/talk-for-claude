@@ -1,0 +1,24 @@
+#!/bin/sh
+# talk: speak text aloud with the local Kokoro-82M voice. See engine/talk.py --help.
+set -eu
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DATA="${TALK_HOME:-$HOME/.claude-talk}"
+export TALK_HOME="$DATA"
+
+case "${1:-}" in
+  --setup) exec sh "$ROOT/scripts/setup.sh" "$DATA" ;;
+  --doctor)
+    if [ -f "$DATA/.ready" ] && [ -x "$DATA/venv/bin/python" ]; then
+      echo "READY (set up $(cat "$DATA/.ready"), data in $DATA)"
+    else
+      echo "NOT_READY: run 'talk --setup' once (2-4 minutes, about 800 MB in $DATA and the Hugging Face cache)"
+      exit 3
+    fi
+    exit 0 ;;
+esac
+
+if [ ! -f "$DATA/.ready" ]; then
+  echo "NOT_READY: run 'talk --setup' once (2-4 minutes)." >&2
+  exit 3
+fi
+exec "$DATA/venv/bin/python" -I "$ROOT/engine/talk.py" "$@"
