@@ -59,19 +59,21 @@ if (which === "validate") {
   ].join("\n");
   const blind = detectors.filter(([re]) => !re.test(planted)).map(([, n]) => n);
   if (blind.length) fail(`detectors did not fire on planted samples: ${blind.join(", ")}`);
-  const ls = sh("git", ["ls-files", "--cached", "--others", "--exclude-standard"]);
-  if (ls.status !== 0) fail("git ls-files failed");
+  // Scan what gets published: the committed tree at HEAD (the gate checker writes local paths
+  // into the working copy of GATES.md; those are redacted before commit).
+  const ls = sh("git", ["ls-tree", "-r", "--name-only", "HEAD"]);
+  if (ls.status !== 0) fail("git ls-tree failed");
   const files = ls.stdout.split("\n").filter(Boolean);
   const forbiddenFiles = files.filter((f) => /(^|\/)(\.env|\.venv|venv|__pycache__)(\/|$)|\.wav$|\.pid$|\.log$/.test(f));
   if (forbiddenFiles.length) fail(`would publish: ${forbiddenFiles.join(", ")}`);
   const hits = [];
   for (const f of files) {
     if (/\.(png|jpg|zip)$/.test(f)) continue;
-    const text = readFileSync(join(ROOT, f), "utf8");
+    const text = sh("git", ["show", `HEAD:${f}`]).stdout;
     for (const [re, name] of detectors) if (re.test(text) && f !== "checks/release.mjs") hits.push(`${f}: ${name}`);
   }
   if (hits.length) fail(hits.join("; "));
-  console.log(`${files.length} files scanned, ${detectors.length} detectors proven on planted samples, 0 hits`);
+  console.log(`${files.length} committed files scanned, ${detectors.length} detectors proven on planted samples, 0 hits`);
   console.log("P3 secrets passed");
 } else if (which === "fresh-install") {
   // Isolated Claude config + isolated data + isolated Hugging Face cache: nothing from this machine is reused.

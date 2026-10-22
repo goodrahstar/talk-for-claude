@@ -21,6 +21,8 @@ if [ -n "$(git status --porcelain)" ]; then
   [ "$DRY" = 1 ] && echo "note: uncommitted changes would block a real publish" || { echo "publish: commit your changes first" >&2; exit 1; }
 fi
 
+node checks/release.mjs secrets >/dev/null || { node checks/release.mjs secrets; echo "publish: secret scan failed, nothing pushed" >&2; exit 1; }
+
 if gh repo view "$REPO" >/dev/null 2>&1; then
   echo "repo exists: $REPO"
   run git push -q origin HEAD:main
