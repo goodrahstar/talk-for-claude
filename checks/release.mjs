@@ -85,8 +85,9 @@ if (which === "validate") {
   if (add.status !== 0) fail(`marketplace add: ${add.out.slice(-400)}`);
   const inst = sh("claude", ["plugin", "install", `${plugin.name}@${market.name}`], { env, cwd: tmpdir() });
   if (inst.status !== 0 || !/install/i.test(inst.out)) fail(`install: ${inst.out.slice(-400)}`);
-  const found = walk(cfg).filter((p) => p.endsWith("bin/talk"));
-  if (found.length !== 1) fail(`expected one installed bin/talk, found ${found.length}`);
+  // The marketplace clone also contains bin/talk; the installed plugin lives under plugins/cache.
+  const found = walk(cfg).filter((p) => p.endsWith("bin/talk") && p.includes("plugins/cache/"));
+  if (found.length !== 1) fail(`expected one installed bin/talk under plugins/cache, found ${found.length}`);
   const pluginDir = join(cfg, dirname(dirname(found[0])));
   if (!existsSync(join(pluginDir, "skills/talk/SKILL.md"))) fail("installed copy has no skills/talk/SKILL.md");
   const talk = join(pluginDir, "bin/talk");

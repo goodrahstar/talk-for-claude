@@ -10,6 +10,7 @@
 | Time until you hear it | about 4 s (speech streams sentence by sentence) |
 | Network needed after setup | **none** (checked with every connection blocked) |
 | Cost | free, no API key |
+| One-time setup | 33 s here, fresh install from GitHub into an empty config (packages may have come from uv's local cache; expect a few minutes on a new Mac) |
 | Disk | about 530 MB engine + 370 MB model |
 
 One machine, one run per check. Re-run them yourself with `npm run check`.
