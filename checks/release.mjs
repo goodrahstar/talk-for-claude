@@ -174,7 +174,7 @@ if (which === "validate") {
     if (!r.out.includes(need)) fail(`missing step: ${need}\n${r.out}`);
   if (!/DRY: gh release (upload|create) v/.test(r.out)) fail("no release step");
   const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
-  if (pkg.scripts.publish !== "sh scripts/publish.sh") fail("npm run publish is not wired to scripts/publish.sh");
+  if (pkg.scripts.release !== "sh scripts/publish.sh") fail("npm run release is not wired to scripts/publish.sh");
   console.log(`dry run resolves ${REPO} v${plugin.version}: repo, description+topics, push, release zip`);
   console.log("P8 publish-script passed");
 } else if (which === "local-switch") {

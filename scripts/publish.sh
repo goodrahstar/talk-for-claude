@@ -1,7 +1,7 @@
 #!/bin/sh
 # One-command publish: create (or update) the public GitHub repo, its description and topics,
 # push main, and attach the release zip for the current plugin.json version. Safe to re-run.
-# Usage: npm run publish            (or: sh scripts/publish.sh --dry-run)
+# Usage: npm run release            (or: sh scripts/publish.sh --dry-run)
 set -eu
 cd "$(dirname "$0")/.."
 

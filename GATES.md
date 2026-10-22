@@ -39,7 +39,7 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
   EXPECT: P7 one-command passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=curl https://raw.githubusercontent.com/goodrahstar/talk-for-claude/main/install.sh | sh -> plugin installed, voice ready, spoke 2.1s; total 32s | P7 one-command passed
 
-- [x] P8: one command (`npm run publish`) creates or updates the public repo with description, topics and the release zip; safe to re-run
+- [x] P8: one command (`npm run release`) creates or updates the public repo with description, topics and the release zip; safe to re-run
   CHECK: node checks/release.mjs publish-script
   EXPECT: P8 publish-script passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=dry run resolves goodrahstar/talk-for-claude v0.1.0: repo, description+topics, push, release zip | P8 publish-script passed

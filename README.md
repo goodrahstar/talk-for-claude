@@ -89,7 +89,7 @@ Why Kokoro-82M: it is the smallest of the open voice models I tested (Pocket TTS
 Fork it, change the names in `.claude-plugin/`, commit, then:
 
 ```bash
-npm run publish
+npm run release
 ```
 
 It creates (or updates) the public GitHub repo with the description and topics from `plugin.json`, pushes `main`, and attaches the release zip. Safe to re-run. `sh scripts/publish.sh --dry-run` shows the steps first.
@@ -114,7 +114,7 @@ claude plugin uninstall talk@talk-for-claude && rm -rf ~/.claude-talk
 | P6 | The install lines above match the names that actually installed |
 | P7 | The one-command installer, run from GitHub into an empty config, installs, sets up and speaks |
 | P9 | `npx talk-for-claude`, from the npm registry into an empty config, installs, sets up and speaks |
-| P8 | `npm run publish` creates or updates the repo, topics and release (dry run checked) |
+| P8 | `npm run release` creates or updates the repo, topics and release (dry run checked) |
 | P10 | The author's own Mac runs the published plugin, not a local copy |
 
 ## License

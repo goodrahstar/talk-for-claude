@@ -8,7 +8,7 @@
     "check": "node checks/release.mjs validate && node checks/engine.mjs all && node checks/release.mjs secrets && node checks/release.mjs readme",
     "check:release": "node checks/release.mjs fresh-install && node checks/release.mjs published",
     "zip": "sh scripts/build-zip.sh",
-    "publish": "sh scripts/publish.sh"
+    "release": "sh scripts/publish.sh"
   },
   "bin": {
     "talk-for-claude": "npm/cli.mjs"
