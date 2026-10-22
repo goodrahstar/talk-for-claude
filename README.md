@@ -37,13 +37,6 @@ Offline or manual: download the zip from [Releases](https://github.com/goodrahst
 
 Needs an **Apple Silicon Mac**, **Claude Code**, and **uv** (the installer adds it with Homebrew if missing).
 
-### claude.ai (cloud, any computer)
-
-1. Download [`talk-claude-ai-skill.zip`](https://github.com/goodrahstar/talk-for-claude/releases/latest/download/talk-claude-ai-skill.zip).
-2. In claude.ai: **Customize > Skills > + > Upload a skill**, pick the zip. Code execution must be on (Settings > Capabilities).
-3. In any chat, after a reply, type **talk**. Claude rewrites the reply for listening and opens a player. Press **Play**.
-
-The player runs Kokoro-82M inside your browser (about 90 MB, downloaded once) and falls back to your device's built-in voice if the model can't load.
 
 ## Use
 
@@ -74,13 +67,12 @@ Why Kokoro-82M: it is the smallest of the open voice models I tested (Pocket TTS
 | `scripts/setup.sh` | One-time setup into `~/.claude-talk` |
 | `install.sh` | The one-command installer |
 | `scripts/publish.sh` | One-command publish to GitHub |
-| `cloud/talk/` | The claude.ai skill: rewrite rules plus the in-browser player |
 | `checks/` | The gate checks behind every number above |
 
 ## Limits
 
 - macOS on Apple Silicon only (MLX and `afplay`).
-- The plugin is for Claude Code on a Mac. claude.ai and Cowork do not install plugins that ship executables, so claude.ai gets the separate skill zip above, which speaks in the browser instead.
+- Claude Code only. claude.ai already has its own read-aloud button.
 - English voices only in this version.
 - Each `/talk` loads the model fresh (about 0.5 s) and frees the memory afterwards.
 - Numbers come from one M3 Pro. Older M1 chips will be slower.
@@ -115,8 +107,6 @@ claude plugin uninstall talk@talk-for-claude && rm -rf ~/.claude-talk
 | P6 | The install lines above match the names that actually installed |
 | P7 | The one-command installer, run from GitHub into an empty config, installs, sets up and speaks |
 | P8 | `npm run publish` creates or updates the repo, topics and release (dry run checked) |
-| P9 | The claude.ai skill zip has the right shape (no executables) and safely embeds any text |
-| P11 | The skill installs in a real claude.ai account and a chat produces a working player |
 | P10 | The author's own Mac runs the published plugin, not a local copy |
 
 ## License

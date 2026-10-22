@@ -32,11 +32,9 @@ fi
 run gh repo edit "$REPO" --description "$DESC" --homepage "https://github.com/$REPO" --add-topic "$TOPICS"
 
 sh scripts/build-zip.sh >/dev/null
-sh scripts/build-cloud-zip.sh >/dev/null
-CLOUD="dist/talk-claude-ai-skill.zip"
 if gh release view "v$V" --repo "$REPO" >/dev/null 2>&1; then
-  run gh release upload "v$V" "$ZIP" "$CLOUD" --repo "$REPO" --clobber
+  run gh release upload "v$V" "$ZIP" --repo "$REPO" --clobber
 else
-  run gh release create "v$V" "$ZIP" "$CLOUD" --repo "$REPO" --title "$NAME $V" --notes "Install: curl -fsSL https://raw.githubusercontent.com/$REPO/main/install.sh | sh"
+  run gh release create "v$V" "$ZIP" --repo "$REPO" --title "$NAME $V" --notes "Install: curl -fsSL https://raw.githubusercontent.com/$REPO/main/install.sh | sh"
 fi
 echo "published https://github.com/$REPO (v$V)"

@@ -44,16 +44,7 @@ Scope: /talk packaged as a Claude Code plugin in a public GitHub repo that is it
   EXPECT: P8 publish-script passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=dry run resolves goodrahstar/talk-for-claude v0.1.0: repo, description+topics, push, release zip | P8 publish-script passed
 
-- [x] P9: cloud: a skill zip (no bin/) passes the skill format check and its player page speaks in a real browser, Kokoro first with system-voice fallback
-  CHECK: node checks/release.mjs cloud-skill
-  EXPECT: P9 cloud-skill passed
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=claude.ai skill zip: talk/SKILL.md + player.html, no bin/, name ok, description 249 chars | P9 cloud-skill passed
-
-- [ ] P11: the cloud skill installs in Rahul's claude.ai account (Customize > Skills) and a claude.ai chat produces a working talk player
-  EVIDENCE: pending. Player verified in real Chrome 2026-10-22 from a local copy: Kokoro-82M played 4/4 chunks via Web Audio; with Kokoro blocked it fell back to the device voice (Samantha) and finished. claude.ai install blocked: Chrome is signed out of claude.ai and Claude may not enter passwords.
-
 - [x] P10: Rahul's own Mac uses the published plugin: old local /talk copies backed up and removed, plugin installed, voice ready
   CHECK: node checks/release.mjs local-switch
   EXPECT: P10 local-switch passed
   EVIDENCE: exit=0; shell=/bin/sh; cwd=<repo>; path=34ec615918d0/18 entries; output=old copies gone; talk@talk-for-claude installed; READY | P10 local-switch passed
-
